@@ -215,16 +215,35 @@ body {
 .game-head { width: 100% !important; min-height: 310px; }
 .GameBox .jjoriping { width: 520px !important; margin-left: 5px; }
 .GameBox .jjoDisplayBar {
+  display: flex !important;
+  flex-direction: column;
   box-sizing: border-box;
   width: 520px !important;
-  height: 128px !important;
+  height: auto !important;
+  min-height: 128px;
   padding: 25px 10px 10px !important;
   border: 3px solid #151b19 !important;
   border-radius: 25px 25px 10px 10px !important;
   background: linear-gradient(#e4b85e, #bd842f) !important;
   box-shadow: 0 7px 0 rgba(0,0,0,.25);
 }
-.GameBox .jjo-display { box-sizing: border-box; width: 494px !important; height: 46px !important; padding-top: 12px !important; border-radius: 8px 8px 2px 2px !important; font-size: 23px !important; background: linear-gradient(#3a2b1b, #211a13) !important; }
+.GameBox .jjo-display {
+  box-sizing: border-box;
+  width: 494px !important;
+  height: auto !important;
+  min-height: 46px;
+  padding: 9px 10px !important;
+  border-radius: 8px 8px 2px 2px !important;
+  font-size: 23px !important;
+  line-height: 28px;
+  white-space: normal !important;
+  overflow: visible !important;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  text-overflow: clip !important;
+  background: linear-gradient(#3a2b1b, #211a13) !important;
+  transition: min-height .2s ease;
+}
 .jjoDisplayBar .graph { box-sizing: border-box; width: 494px !important; border: 0 !important; }
 .jjo-turn-time { background: #235938 !important; }
 .jjo-turn-time .graph-bar { background: #7fdba2 !important; }
