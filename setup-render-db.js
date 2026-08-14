@@ -16,6 +16,12 @@ async function importDump(db) {
   let copy = null;
   let rows = [];
 
+  function shouldSkip(line) {
+    return /^ALTER (TABLE|SEQUENCE) .* OWNER TO /i.test(line) ||
+      /^CREATE EXTENSION /i.test(line) ||
+      /^COMMENT ON EXTENSION /i.test(line);
+  }
+
   async function flushSql() {
     const statement = sql.join('\n').trim();
     sql = [];
@@ -47,7 +53,7 @@ async function importDump(db) {
     if (match) {
       await flushSql();
       copy = { table: match[1], columns: match[2] };
-    } else {
+    } else if (!shouldSkip(line)) {
       sql.push(line);
     }
   }
@@ -64,6 +70,9 @@ async function importDump(db) {
   const existing = await db.query("SELECT to_regclass('public.users') AS users");
   if (!existing.rows[0].users) {
     console.log('Importing bundled KKuTu database (first deploy only)...');
+    // A failed first import can leave a partial schema. This only runs before
+    // the users table exists, so an initialized database is never reset.
+    await db.query('DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;');
     await importDump(db);
   } else {
     console.log('Database schema already exists; skipping seed import.');
