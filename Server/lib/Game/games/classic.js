@@ -325,7 +325,7 @@ function makeDevFakeWord(my){
 	var isRev = Const.GAME_TYPE[my.mode] == 'KAP';
 	var edge = String(my.game.char || '핵');
 	var chars = '가나다라마바사아자차카타파하';
-	var size = Math.max(0, 50 - edge.length);
+	var size = Math.max(0, 120 - edge.length);
 	var seed = Date.now() + (++DEV_FAKE_SERIAL * 7919);
 	var body = '';
 	var i;
