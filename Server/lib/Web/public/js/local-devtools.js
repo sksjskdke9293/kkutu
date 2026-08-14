@@ -43,6 +43,7 @@
         .append(actionButton('+1,000 게임 점수', 'score', 1000))
         .append(actionButton('현재 턴 넘기기', 'skip'))
         .append(actionButton('AI 로봇 추가', 'robot'))
+        .append(actionButton('사기 끄투봇 추가', 'fakeRobot'))
         .append(actionButton('준비 / 시작', 'readyStart')))
       .append($('<div id="LocalDevStatus">').text('기능을 선택하세요.'))
       .append($('<small>').text('` 또는 ~ 키로 열기 · 모든 접속자 사용 가능'));

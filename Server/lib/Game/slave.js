@@ -215,6 +215,10 @@ KKuTu.onClientMessage = function($c, msg){
 					$c.devAutoWord = msg.enabled !== false;
 					$c.chat('[DEV] 자동 단어 ' + ($c.devAutoWord ? 'ON' : 'OFF'), 1);
 					break;
+				case 'fakeRobot':
+					if(!temp || temp.gaming || temp.master != $c.id) return;
+					temp.addAI($c, true);
+					break;
 				case 'skip':
 					if(!temp || !temp.gaming || temp.master != $c.id || !temp.turnEnd) return;
 					temp.turnEnd();

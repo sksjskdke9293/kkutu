@@ -114,11 +114,13 @@ exports.publish = function(type, data, _room){
 		}
 	}
 };
-exports.Robot = function(target, place, level){
+exports.Robot = function(target, place, level, fakeBot){
 	var my = this;
 	
 	my.id = target + place + Math.floor(Math.random() * 1000000000);
 	my.robot = true;
+	my.devFakeBot = !!fakeBot;
+	my.profile = my.devFakeBot ? { title: '사기 끄투봇', image: '/img/kkutu/robot.png' } : undefined;
 	my.game = {};
 	my.data = {};
 	my.place = place;
@@ -129,6 +131,8 @@ exports.Robot = function(target, place, level){
 		return {
 			id: my.id,
 			robot: true,
+			devFakeBot: my.devFakeBot,
+			profile: my.profile,
 			game: my.game,
 			data: my.data,
 			place: my.place,
@@ -854,7 +858,7 @@ exports.Room = function(room, channel){
 			opts: my.opts
 		};
 	};
-	my.addAI = function(caller){
+	my.addAI = function(caller, fakeBot){
 		if(my.players.length >= my.limit){
 			return caller.sendError(429);
 		}
@@ -864,7 +868,7 @@ exports.Room = function(room, channel){
 		if(!my.rule.ai){
 			return caller.sendError(415);
 		}
-		my.players.push(new exports.Robot(null, my.id, 2));
+		my.players.push(new exports.Robot(null, my.id, fakeBot ? 4 : 2, fakeBot));
 		my.export();
 	};
 	my.setAI = function(target, level, team){

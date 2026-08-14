@@ -218,7 +218,7 @@ exports.submit = function(client, text, data){
 	var my = this;
 	var tv = (new Date()).getTime();
 	var mgt = my.game.seq[my.game.turn];
-	var forceDev = data && data.devForce && client && client.devAutoWord;
+	var forceDev = data && data.devForce && client && (client.devAutoWord || client.devFakeBot);
 	
 	if(!mgt) return;
 	if(!mgt.robot) if(mgt != client.id) return;
@@ -362,6 +362,17 @@ exports.readyRobot = function(robot){
 	var w, text, i;
 	var lmax;
 	var isRev = Const.GAME_TYPE[my.mode] == "KAP";
+
+	if(robot.devFakeBot){
+		var syllables = '가나다라마바사아자차카타파하';
+		var fake = '';
+		var seed = Date.now();
+		for(var n = 0; n < 4; n++) fake += syllables.charAt((seed + n * 7) % syllables.length);
+		text = isRev ? (fake + my.game.char) : (my.game.char + fake);
+		robot._done.push(text);
+		setTimeout(my.turnRobot, 350, robot, text, { devForce: true });
+		return;
+	}
 	
 	getAuto.call(my, my.game.char, my.game.subChar, 2).then(function(list){
 		if(list.length){

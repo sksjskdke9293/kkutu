@@ -25,6 +25,10 @@ window.KKuTuLocalDev = {
 			send('invite', { target: 'AI' });
 			return true;
 		}
+		if(action == 'fakeRobot'){
+			send('dev', { action: 'fakeRobot' });
+			return true;
+		}
 		if(action == 'readyStart'){
 			if(!$data.room) return false;
 			if($data.room.master == $data.id) $stage.menu.start.trigger('click');
