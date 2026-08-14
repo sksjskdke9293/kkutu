@@ -45,6 +45,14 @@ proxy.on('error', (err, req, res) => {
 });
 
 const server = http.createServer((req, res) => {
+  if (req.url === '/') {
+    res.writeHead(302, {
+      Location: '/?server=0#',
+      'Cache-Control': 'no-store'
+    });
+    res.end();
+    return;
+  }
   proxy.web(req, res, { target: 'http://127.0.0.1:3000' });
 });
 server.on('upgrade', (req, socket, head) => {
