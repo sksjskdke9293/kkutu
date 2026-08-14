@@ -25,6 +25,10 @@
 
   function mount() {
     if ($('#LocalDevPanel').length) return;
+    if (!window.KKuTuLocalDev || !window.KKuTuLocalDev.ready()) {
+      window.setTimeout(mount, 500);
+      return;
+    }
     var panel = $('<aside id="LocalDevPanel">')
       .append($('<div class="dev-head">').append('<b>운영자 패널</b><span>ADMIN</span>'))
       .append($('<div class="dev-grid">')
@@ -44,15 +48,9 @@
         .append(actionButton('준비 / 시작', 'readyStart')))
       .append($('<div id="LocalDevStatus">').text('기능을 선택하세요.'))
       .append($('<small>').text('` 또는 ~ 키로 열기 · admin1/admin2 전용'));
-    var toggle = $('<button id="LocalDevToggle">').text('</>').attr('title', '운영자 패널 열기').hide()
+    var toggle = $('<button id="LocalDevToggle">').text('</>').attr('title', '운영자 패널 열기')
       .on('click', function () { if (api()) panel.toggleClass('open'); });
     $('body').append(toggle, panel);
-
-    function revealForAdmin() {
-      if (window.KKuTuLocalDev && window.KKuTuLocalDev.ready()) toggle.show();
-      else window.setTimeout(revealForAdmin, 500);
-    }
-    revealForAdmin();
 
     window.addEventListener('keydown', function (event) {
       if (event.code !== 'Backquote' && event.key !== '`' && event.key !== '~') return;
