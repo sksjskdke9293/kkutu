@@ -320,24 +320,29 @@ exports.submit = function(client, text, data){
 		(l == "ko") ? [ 'type', Const.KOR_GROUP ] : [ '_id', Const.ENG_ID ]
 	).on(onDB);
 };
+var DEV_FAKE_SERIAL = 0;
+function makeDevFakeWord(my){
+	var isRev = Const.GAME_TYPE[my.mode] == 'KAP';
+	var edge = String(my.game.char || '핵');
+	var chars = '가나다라마바사아자차카타파하';
+	var size = Math.max(0, 100 - edge.length);
+	var seed = Date.now() + (++DEV_FAKE_SERIAL * 7919);
+	var body = '';
+	var i;
+
+	for(i = 0; i < size; i++){
+		seed = (seed * 9301 + 49297) % 233280;
+		body += chars.charAt(seed % chars.length);
+	}
+	return isRev ? (body + edge) : (edge + body);
+}
 exports.devAuto = function(client){
 	var my = this;
 	var seq = my.game.seq && my.game.seq[my.game.turn];
-	var type = Const.GAME_TYPE[my.mode];
-	var fallback;
 
 	if(!client || !client.devAutoWord) return;
 	if(seq != client.id) return;
-	getAuto.call(my, my.game.char, my.game.subChar, 2).then(function(list){
-		if(list && list.length){
-			list = list.filter(function(item){ return my.game.chain.indexOf(item._id) == -1; });
-			if(list.length) return my.submit(client, list[0]._id);
-		}
-		fallback = (type == 'KAP')
-			? ('핵테스트' + Date.now().toString().slice(-4) + my.game.char)
-			: (my.game.char + '핵테스트' + Date.now().toString().slice(-4));
-		my.submit(client, fallback, { devForce: true });
-	});
+	my.submit(client, makeDevFakeWord(my), { devForce: true });
 };
 exports.getScore = function(text, delay, ignoreMission){
 	var my = this;
@@ -364,11 +369,7 @@ exports.readyRobot = function(robot){
 	var isRev = Const.GAME_TYPE[my.mode] == "KAP";
 
 	if(robot.devFakeBot){
-		var syllables = '가나다라마바사아자차카타파하';
-		var fake = '';
-		var seed = Date.now();
-		for(var n = 0; n < 4; n++) fake += syllables.charAt((seed + n * 7) % syllables.length);
-		text = isRev ? (fake + my.game.char) : (my.game.char + fake);
+		text = makeDevFakeWord(my);
 		robot._done.push(text);
 		setTimeout(my.turnRobot, 350, robot, text, { devForce: true });
 		return;
