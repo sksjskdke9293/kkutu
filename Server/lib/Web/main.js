@@ -229,8 +229,9 @@ Server.get("/", function(req, res){
 		}else{
 			delete req.session.profile;
 		}
-		if(server !== undefined && !$doc && !req.session.guestAccepted){
-			return res.redirect('/login');
+		if(server !== undefined && !$doc){
+			if(req.session.guestAccepted === 'once') req.session.guestAccepted = 'used';
+			else return res.redirect('/login');
 		}
 		page(req, res, Const.MAIN_PORTS[server] ? "kkutu" : "portal", {
 			'_page': "kkutu",

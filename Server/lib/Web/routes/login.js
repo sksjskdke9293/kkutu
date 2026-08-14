@@ -130,7 +130,8 @@ exports.run = (Server, page) => {
 	}
 	
 	Server.get("/login", (req, res) => {
-		if (req.session.profile || req.session.guestAccepted) return res.redirect('/?server=0#');
+		if (req.session.profile || req.session.guestAccepted === 'once') return res.redirect('/?server=0#');
+		delete req.session.guestAccepted;
 		page(req, res, "login", {
             '_id': req.session.id,
             'error': req.query.error,
@@ -183,7 +184,7 @@ exports.run = (Server, page) => {
     Server.get('/guest', (req, res) => {
         delete req.session.profile;
         req.session.admin = false;
-        req.session.guestAccepted = true;
+        req.session.guestAccepted = 'once';
         MainDB.session.remove([ '_id', req.session.id ]).on(function () {
             res.redirect('/?server=0#');
         });
