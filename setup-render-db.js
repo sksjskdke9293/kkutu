@@ -1,11 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+const { once } = require('events');
 const { Client } = require('./Server/lib/node_modules/pg');
-
-const decode = value => value === '\\N' ? null : value.replace(/\\([btnrfv\\])/g, (_, c) => ({
-  b: '\b', t: '\t', n: '\n', r: '\r', f: '\f', v: '\v', '\\': '\\'
-})[c]);
+const copyFrom = require('./Server/lib/node_modules/pg-copy-streams').from;
 
 async function importDump(db) {
   const input = readline.createInterface({
@@ -14,7 +12,6 @@ async function importDump(db) {
   });
   let sql = [];
   let copy = null;
-  let rows = [];
 
   function shouldSkip(line) {
     return /^ALTER (TABLE|SEQUENCE) .* OWNER TO /i.test(line) ||
@@ -27,32 +24,25 @@ async function importDump(db) {
     sql = [];
     if (statement) await db.query(statement);
   }
-  async function flushRows() {
-    if (!rows.length) return;
-    const values = [];
-    const tuples = rows.map(row => '(' + row.map(value => {
-      values.push(value);
-      return '$' + values.length;
-    }).join(',') + ')');
-    await db.query(`INSERT INTO ${copy.table} (${copy.columns}) VALUES ${tuples.join(',')}`, values);
-    rows = [];
+  async function finishCopy() {
+    copy.end();
+    await once(copy, 'finish');
+    copy = null;
   }
 
   for await (const line of input) {
     if (copy) {
       if (line === '\\.') {
-        await flushRows();
-        copy = null;
+        await finishCopy();
       } else {
-        rows.push(line.split('\t').map(decode));
-        if (rows.length >= 500) await flushRows();
+        if (!copy.write(line + '\n')) await once(copy, 'drain');
       }
       continue;
     }
     const match = line.match(/^COPY\s+([^ ]+)\s+\((.+)\)\s+FROM stdin;$/);
     if (match) {
       await flushSql();
-      copy = { table: match[1], columns: match[2] };
+      copy = db.query(copyFrom(`COPY ${match[1]} (${match[2]}) FROM STDIN`));
     } else if (!shouldSkip(line)) {
       sql.push(line);
     }
