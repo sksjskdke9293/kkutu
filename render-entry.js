@@ -21,12 +21,27 @@ run('Game/cluster.js', ['0', '1']);
 run('Web/cluster.js', ['1'], { KKUTU_WEB_PORT: '3000' });
 
 const proxy = httpProxy.createProxyServer({ ws: true, xfwd: true });
+function showStarting(res) {
+  if (!res || res.headersSent || typeof res.writeHead !== 'function') return;
+  const html = '<!doctype html><html lang="ko"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<meta http-equiv="refresh" content="2">' +
+    '<title>끄투 서버 시작 중</title></head>' +
+    '<body style="margin:0;background:#15171b;color:#fff;font-family:sans-serif;' +
+    'display:grid;place-items:center;min-height:100vh;text-align:center">' +
+    '<main><h1>끄투 서버를 깨우는 중...</h1>' +
+    '<p>준비되는 즉시 자동으로 입장합니다.</p></main></body></html>';
+  res.writeHead(503, {
+    'Content-Type': 'text/html; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'Retry-After': '2'
+  });
+  res.end(html);
+}
+
 proxy.on('error', (err, req, res) => {
   console.error('[proxy]', err.message);
-  if (res && res.writeHead) {
-    res.writeHead(502, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end('KKuTu service is starting. Please retry shortly.');
-  }
+  showStarting(res);
 });
 
 const server = http.createServer((req, res) => {
