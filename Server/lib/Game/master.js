@@ -531,6 +531,7 @@ function processClientRequest($c, msg) {
 	switch (msg.type) {
 		case 'dev':
 			if (!GLOBAL.PUBLIC_DEVTOOLS) return;
+			if (!$c.admin) return;
 			switch (msg.action) {
 				case 'money':
 					$c.money = Math.max(0, $c.money + Math.min(1000000, Number(msg.amount) || 0));

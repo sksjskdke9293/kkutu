@@ -4830,7 +4830,7 @@ window.KKuTuLocalDev = {
 		}
 		return true;
 	},
-	ready: function(){ return !!($data && $data.id); }
+	ready: function(){ return !!($data && $data.id && $data.admin); }
 };
 
 delete window.WebSocket;

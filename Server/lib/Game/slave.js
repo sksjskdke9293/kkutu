@@ -194,6 +194,7 @@ KKuTu.onClientMessage = function($c, msg){
 	switch(msg.type){
 		case 'dev':
 			if(!GLOBAL.PUBLIC_DEVTOOLS) return;
+			if(!$c.admin) return;
 			temp = ROOM[$c.place];
 			switch(msg.action){
 				case 'money':

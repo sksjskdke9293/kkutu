@@ -24,6 +24,55 @@ const glob = require('glob-promise');
 const GLOBAL	 = require("../../sub/global.json");
 const config = require('../../sub/auth.json');
 const path = require('path')
+const crypto = require('crypto');
+
+const ADMIN_IDS = ['admin1', 'admin2'];
+const ADMIN_INITIAL_PASSWORD = 'admin';
+
+function passwordHash(password, salt) {
+    salt = salt || crypto.randomBytes(16).toString('hex');
+    const rounds = 120000;
+    const hash = crypto.pbkdf2Sync(password, salt, rounds, 32, 'sha256').toString('hex');
+    return `pbkdf2$${rounds}$${salt}$${hash}`;
+}
+
+function passwordMatches(password, stored) {
+    const parts = String(stored || '').split('$');
+    if (parts.length !== 4 || parts[0] !== 'pbkdf2') return false;
+    const actual = Buffer.from(parts[3], 'hex');
+    const expected = crypto.pbkdf2Sync(password, parts[2], Number(parts[1]), actual.length, 'sha256');
+    return actual.length === expected.length && crypto.timingSafeEqual(actual, expected);
+}
+
+function validId(id) {
+    return /^[A-Za-z0-9_]{3,20}$/.test(id);
+}
+
+function profileFor(req, id) {
+    return {
+        id: id,
+        sid: req.session.id,
+        title: id,
+        name: id,
+        birth: [4, 16, 0],
+        _age: { min: 20 }
+    };
+}
+
+function finishLogin(req, profile, callback) {
+    const now = Date.now();
+    req.session.profile = profile;
+    req.session.admin = ADMIN_IDS.includes(profile.id);
+    req.session.guestAccepted = false;
+    MainDB.session.upsert([ '_id', req.session.id ]).set({
+        profile: profile,
+        createdAt: now
+    }).on(function () {
+        MainDB.users.update([ '_id', profile.id ]).set([ 'lastLogin', now ]).on(function () {
+            callback();
+        });
+    });
+}
 
 function process(req, accessToken, MainDB, $p, done) {
     $p.token = accessToken;
@@ -81,33 +130,71 @@ exports.run = (Server, page) => {
 	}
 	
 	Server.get("/login", (req, res) => {
-		if(global.isPublic){
-			page(req, res, "login", { '_id': req.session.id, 'text': req.query.desc, 'loginList': strategyList});
-		}else{
-			let now = Date.now();
-			let id = req.query.id || "ADMIN";
-			let lp = {
-				id: id,
-				title: "LOCAL #" + id,
-				birth: [ 4, 16, 0 ],
-				_age: { min: 20, max: undefined }
-			};
-			MainDB.session.upsert([ '_id', req.session.id ]).set([ 'profile', JSON.stringify(lp) ], [ 'createdAt', now ]).on(function($res){
-				MainDB.users.update([ '_id', id ]).set([ 'lastLogin', now ]).on();
-				req.session.admin = true;
-				req.session.profile = lp;
-				res.redirect("/");
-			});
-		}
+		if (req.session.profile || req.session.guestAccepted) return res.redirect('/?server=0#');
+		page(req, res, "login", {
+            '_id': req.session.id,
+            'error': req.query.error,
+            'notice': req.query.notice,
+            'loginList': strategyList
+        });
 	});
 
+    Server.post('/auth/register', (req, res) => {
+        const id = String(req.body.id || '').trim();
+        const password = String(req.body.password || '');
+        const passwordCheck = String(req.body.passwordCheck || '');
+        if (!validId(id)) return res.redirect('/login?error=' + encodeURIComponent('아이디는 영문, 숫자, 밑줄 3~20자로 입력하세요.'));
+        if (ADMIN_IDS.includes(id)) return res.redirect('/login?error=' + encodeURIComponent('운영자 아이디는 회원가입할 수 없습니다.'));
+        if (password.length < 4 || password.length > 64) return res.redirect('/login?error=' + encodeURIComponent('비밀번호는 4~64자로 입력하세요.'));
+        if (password !== passwordCheck) return res.redirect('/login?error=' + encodeURIComponent('비밀번호 확인이 일치하지 않습니다.'));
+        MainDB.users.findOne([ '_id', id ]).limit([ 'password', true ]).on(function (user) {
+            if (user) return res.redirect('/login?error=' + encodeURIComponent('이미 사용 중인 아이디입니다.'));
+            MainDB.users.upsert([ '_id', id ]).set({
+                password: passwordHash(password),
+                lastLogin: Date.now()
+            }).on(function () {
+                finishLogin(req, profileFor(req, id), function () {
+                    res.redirect('/?server=0#');
+                });
+            });
+        });
+    });
+
+    Server.post('/auth/login', (req, res) => {
+        const id = String(req.body.id || '').trim();
+        const password = String(req.body.password || '');
+        if (!validId(id) || !password) return res.redirect('/login?error=' + encodeURIComponent('아이디와 비밀번호를 입력하세요.'));
+        MainDB.users.findOne([ '_id', id ]).limit([ 'password', true ]).on(function (user) {
+            const isInitialAdmin = ADMIN_IDS.includes(id) && password === ADMIN_INITIAL_PASSWORD && (!user || !user.password);
+            if (!isInitialAdmin && (!user || !passwordMatches(password, user.password))) {
+                return res.redirect('/login?error=' + encodeURIComponent('아이디 또는 비밀번호가 올바르지 않습니다.'));
+            }
+            const login = function () {
+                finishLogin(req, profileFor(req, id), function () {
+                    res.redirect('/?server=0#');
+                });
+            };
+            if (isInitialAdmin) {
+                MainDB.users.upsert([ '_id', id ]).set({ password: passwordHash(password) }).on(login);
+            } else login();
+        });
+    });
+
+    Server.get('/guest', (req, res) => {
+        delete req.session.profile;
+        req.session.admin = false;
+        req.session.guestAccepted = true;
+        MainDB.session.remove([ '_id', req.session.id ]).on(function () {
+            res.redirect('/?server=0#');
+        });
+    });
+
 	Server.get("/logout", (req, res) => {
-		if(!req.session.profile){
-			return res.redirect("/");
-		} else {
-			req.session.destroy();
-			res.redirect('/');
-		}
+		MainDB.session.remove([ '_id', req.session.id ]).on(function () {
+            req.session.destroy(function () {
+                res.redirect('/login');
+            });
+        });
 	});
 
 	Server.get("/loginfail", (req, res) => {

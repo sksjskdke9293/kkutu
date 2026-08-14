@@ -47,7 +47,7 @@ proxy.on('error', (err, req, res) => {
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
     res.writeHead(302, {
-      Location: '/?server=0#',
+      Location: '/login',
       'Cache-Control': 'no-store'
     });
     res.end();

@@ -1,5 +1,5 @@
 {
-	"ADMIN": [ "Input admin id here" ],
+	"ADMIN": [ "admin1", "admin2" ],
 	"MAIN_PORTS": [ 8080 ],
 	"GAME_SERVER_HOST": "127.0.0.2",
 	"KKUTUHOT_PATH": "/kkutu/data/kkutuhot.json",
