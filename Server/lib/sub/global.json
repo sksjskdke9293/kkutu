@@ -1,0 +1,27 @@
+{
+  "ADMIN": ["ADMIN"],
+  "MAIN_PORTS": [8080],
+  "GAME_SERVER_HOST": "127.0.0.2",
+  "KKUTUHOT_PATH": "./data/kkutuhot.json",
+  "PASS": "local-only",
+  "PG_HOST": "127.0.0.1",
+  "PG_USER": "postgres",
+  "PG_PASSWORD": "kkutu-local",
+  "PG_PORT": 55432,
+  "PG_DATABASE": "main",
+  "GOOGLE_RECAPTCHA_TO_GUEST": false,
+  "GOOGLE_RECAPTCHA_TO_USER": false,
+  "GOOGLE_RECAPTCHA_SITE_KEY": "",
+  "GOOGLE_RECAPTCHA_SECRET_KEY": "",
+  "IS_SECURED": false,
+  "LOCAL_DEVTOOLS": true,
+  "PUBLIC_DEVTOOLS": true,
+  "SSL_OPTIONS": {"isPFX": false, "isCA": false},
+  "USER_BLOCK_OPTIONS": {
+    "USE_MODULE": false,
+    "USE_X_FORWARDED_FOR": false,
+    "BLOCK_IP_ONLY_FOR_GUEST": true,
+    "DEFAULT_BLOCKED_TEXT": "차단된 사용자입니다.",
+    "BLOCKED_FOREVER": "영구 이용 제한"
+  }
+}

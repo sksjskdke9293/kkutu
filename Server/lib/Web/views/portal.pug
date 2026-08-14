@@ -1,0 +1,62 @@
+//-
+	Rule the words! KKuTu Online
+	Copyright (C) 2017 JJoriping(op@jjo.kr)
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
+extends layout
+
+block Subject
+	title= L('title')
+
+block CSS
+	link(rel='stylesheet', href='/css/in_game_kkutu.css')
+	link(rel='stylesheet', href='/css/local-portal.css')
+
+block Middle
+	main.local-landing
+		div.word-cloud(aria-hidden='true')
+			span.w1 글리세롤
+			span.w2 자전거
+			span.w3 로도피산맥
+			span.w4 놀부
+			span.w5 자라투스트라는이렇게말했다
+			span.w6 끄나풀
+			span.w7 투르크메니스탄
+			span.w8 온도계
+			span.w9 라그랑주
+			span.w10 인도말레이시아동물지리아계
+		section.hero
+			p.tagline 글자로 놀자! 끄투 온라인
+			h1.kkutu-logo KKUTU
+			div.frog-console
+				span.frog-eye.eye-left
+				span.frog-eye.eye-right
+				button#game-start= L('gameStart')
+			p.local-note 로그인 없이 바로 즐기는 로컬 끄투
+			div.server-list-box
+				a#server-refresh(title=L('serverRefresh'))
+					+FA('refresh')
+				span 서버 준비 중
+				span#server-total
+				div#server-list
+		div.character-row(aria-hidden='true')
+			- for (var i = 0; i < 12; i++)
+				span.character(class='c' + i)
+		footer.landing-footer
+			span KKuTu Local
+			span ·
+			span 원작 JJoriping
+
+block Bottom
+	// local landing has its own compact footer
