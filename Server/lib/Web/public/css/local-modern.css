@@ -548,16 +548,14 @@ body.is-lobby .rooms-item {
 body.is-lobby .rooms-title { font-size: 16px !important; }
 body.is-lobby .users-item { width: 100% !important; height: 40px !important; }
 body.is-lobby .MeBox {
-  width: 23% !important;
-  height: 138px !important;
-  margin-top: 12px !important;
+  display: none !important;
 }
 body.is-lobby .ChatBox {
-  width: calc(77% - 12px) !important;
-  height: 138px !important;
-  margin: 12px 0 0 12px !important;
+  width: 100% !important;
+  height: 120px !important;
+  margin: 12px 0 0 !important;
 }
-body.is-lobby .ChatBox #Chat { height: 72px !important; }
+body.is-lobby .ChatBox #Chat { height: 50px !important; }
 body.is-lobby .ChatBox #Talk { width: calc(100% - 105px) !important; margin-left: 9px !important; }
 
 /* Waiting room: player cards consume the available screen instead of 1080px */
@@ -627,7 +625,6 @@ body.is-gaming .game-body { bottom: 14px !important; }
   #Middle { overflow-y: auto; }
   body.is-lobby .UserListBox { width: 30% !important; }
   body.is-lobby .RoomListBox, body.is-lobby .ShopBox { width: calc(70% - 10px) !important; margin-left: 10px !important; }
-  body.is-lobby .MeBox { width: 30% !important; }
-  body.is-lobby .ChatBox { width: calc(70% - 10px) !important; margin-left: 10px !important; }
+  body.is-lobby .ChatBox { width: 100% !important; margin-left: 0 !important; }
   body.is-waiting .room-users { grid-template-columns: repeat(2, minmax(220px, 1fr)); overflow-y: auto; }
 }
