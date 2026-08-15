@@ -61,5 +61,12 @@
     }, true);
   }
 
-  $(mount);
+  $(function () {
+    $('#ReferenceQuick').on('click', function () { $('#QuickRoomBtn').trigger('click'); });
+    $('#ReferenceFriendly').on('click', function () { $('#RoomListBtn, #QuickRoomBtn').first().trigger('click'); });
+    $('#ReferenceDictionary').on('click', function () { $('#DictionaryBtn').trigger('click'); });
+    $('#ReferenceRank').on('click', function () { $('#LeaderboardBtn').trigger('click'); });
+    $('#ReferenceStorage').on('click', function () { $('.MeBox').trigger('click'); });
+    mount();
+  });
 })();

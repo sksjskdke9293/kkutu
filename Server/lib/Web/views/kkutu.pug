@@ -70,6 +70,30 @@ block Jungle
 block Middle
 	- var VERSION = L('version');
 	- var nick = SESSION.profile ? (SESSION.profile.title || SESSION.profile.name) : null;
+	div.reference-profile
+		div.reference-face ◡
+		div.reference-profile-copy
+			strong= nick || '손님'
+			span 레벨 1
+			div.reference-level
+	div.reference-currency
+		span.reference-gem ◆ 0
+		span.reference-coin ◎ 0
+		span.reference-round-icon ♧
+		span.reference-round-icon ▣
+		span.reference-round-icon ⚙
+	div.reference-side-nav
+		button#ReferenceQuick 빠른 시작
+		button#ReferenceRank 🏆 순위전
+		button#ReferenceFriendly ▶ 친선전
+		button#ReferenceTutorial ♧ 튜토리얼
+		button#ReferenceWords ▣ 낱말집
+		button#ReferenceDictionary ▦ 낱말 사전
+		button#ReferenceMarbles ◉ 글자 구슬
+		button#ReferenceStorage ♙ 보관함
+	div.reference-mascot
+		div.reference-mascot-body
+		strong= nick || '손님'
 	div#Intro
 		img#intro(src='/img/kkutu/intro.png')
 		// img#intro-start(src='/img/kkutu/intro_start.gif')

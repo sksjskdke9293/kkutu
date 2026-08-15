@@ -718,3 +718,80 @@ body.is-gaming .game-user {
   body.is-gaming .chain { left: auto !important; right: 18px; transform: scale(.72); transform-origin: right top; }
   body.is-gaming .items { right: auto !important; left: 18px !important; }
 }
+
+/* Saved kkutu.kr layout source: full-page chrome and state composition. */
+body { background: #edf7e8 !important; }
+#Background {
+  opacity: .16 !important;
+  filter: grayscale(1) sepia(.15) hue-rotate(60deg) saturate(.5) !important;
+}
+#Top { height: 96px !important; background: #f9fbfb !important; box-shadow: 0 3px 12px rgba(40,57,48,.08) !important; }
+#Top:before, #global-notice { display: none !important; }
+#Top > * { display:none !important; }
+#Middle { height: calc(100vh - 96px) !important; padding: 0 !important; }
+.reference-profile {
+  position: fixed; z-index: 30; top: 10px; left: 14px; display: flex; height: 72px; align-items: center; gap: 12px;
+}
+.reference-face { display:flex; width:56px; height:56px; align-items:center; justify-content:center; border:2px solid #ddd; border-radius:50%; color:#777; font-size:25px; background:#fff; }
+.reference-profile-copy { display:grid; grid-template-columns:auto auto; align-items:center; min-width:390px; gap:2px 12px; color:#111; }
+.reference-profile-copy strong { grid-column:1 / 3; font-size:24px; }
+.reference-profile-copy span { font-size:13px; }
+.reference-level { width:320px; height:12px; border:2px solid #b7ecd3; border-radius:99px; background:#effcf5; }
+.reference-currency { position:fixed; z-index:30; top:22px; right:24px; display:flex; align-items:center; gap:34px; font-size:17px; font-weight:800; }
+.reference-gem { color:#9f55db; }.reference-coin { color:#e9ad00; }
+.reference-round-icon { display:flex; width:42px; height:42px; margin-left:-20px; align-items:center; justify-content:center; border:3px solid #ddd; border-radius:50%; color:#777; background:#fff; }
+.reference-side-nav { display:none; position:fixed; z-index:8; top:300px; left:20px; width:200px; }
+.reference-side-nav button { display:block; width:190px; height:52px; margin:6px 0; padding:0 18px; border:0; border-radius:28px; color:#52605b; font-size:20px; font-weight:800; text-align:left; background:rgba(208,222,202,.72); }
+.reference-side-nav button:nth-child(2) { color:#17736d; background:#c8f5e5; }
+.reference-side-nav button:nth-child(3) { color:#6c6014; background:#fffbd8; }
+.reference-side-nav button:nth-child(4) { color:#27845c; background:#cef1d7; }
+.reference-mascot { display:none; position:fixed; z-index:4; top:43%; left:38%; color:#111; text-align:center; transform:translate(-50%,-50%); }
+.reference-mascot-body { position:relative; width:126px; height:142px; margin-bottom:22px; border-radius:62px 62px 32px 32px; background:#ffdc65; box-shadow:0 14px 16px rgba(30,50,35,.12); }
+.reference-mascot-body:before { content:'• ᴗ •'; position:absolute; top:37px; left:0; width:100%; font-size:32px; letter-spacing:10px; }
+.reference-mascot strong { font-size:18px; }
+
+body.is-lobby .reference-side-nav, body.is-lobby .reference-mascot { display:block; }
+body.is-lobby #Middle { padding:14px 280px 12px 42vw !important; }
+body.is-lobby .kkutu-menu { position:relative; width:calc(58vw - 280px) !important; min-height:92px; margin:0 !important; padding:16px !important; border:0; border-radius:0; background:#fff !important; box-shadow:none; }
+body.is-lobby .kkutu-menu button:not(#NewRoomBtn):not(#QuickRoomBtn) { display:none !important; }
+body.is-lobby .kkutu-menu #QuickRoomBtn, body.is-lobby .kkutu-menu #NewRoomBtn { position:absolute; top:42px; right:112px; min-width:94px; }
+body.is-lobby .kkutu-menu #NewRoomBtn { right:12px; }
+body.is-lobby .kkutu-menu:before { content:'친선전'; display:block; width:100%; color:#6d6215; font-size:18px; font-weight:900; }
+body.is-lobby .kkutu-menu:after { content:'원하는 유형의 게임을 자유롭게 즐겨요.'; position:absolute; top:42px; left:16px; width:190px; color:#777; font-size:12px; }
+body.is-lobby .UserListBox { display:none !important; }
+body.is-lobby .RoomListBox, body.is-lobby .ShopBox { width:calc(58vw - 280px) !important; height:calc(100vh - 215px) !important; min-height:0; margin:0 !important; border-radius:0 0 18px 18px !important; box-shadow:0 6px 20px rgba(30,40,35,.08) !important; }
+body.is-lobby .RoomListBox .product-title, body.is-lobby .ShopBox .product-title { display:none; }
+body.is-lobby .RoomListBox .product-body, body.is-lobby .ShopBox .product-body { height:100% !important; background:#f7f8f8 !important; }
+body.is-lobby .rooms-item { min-height:46px !important; margin:6px 0 !important; padding:10px 16px !important; border:0 !important; border-radius:14px !important; background:#fff !important; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+body.is-lobby .ChatBox { position:fixed !important; z-index:12; right:0; top:96px; width:280px !important; height:calc(100vh - 96px) !important; margin:0 !important; border-radius:0 !important; background:#f7f8fa !important; }
+body.is-lobby .RoomListBox, body.is-lobby .ShopBox, body.is-lobby .kkutu-menu { margin-right:0 !important; }
+body.is-lobby .ChatBox #Chat { height:calc(100% - 96px) !important; }
+
+body.is-waiting #Middle { padding:56px 280px 0 0 !important; }
+body.is-waiting .kkutu-menu { position:fixed; z-index:12; top:96px; left:0; width:calc(100vw - 280px) !important; min-height:136px; margin:0 !important; border-radius:0; justify-content:center; background:#fff !important; box-shadow:0 2px 10px rgba(0,0,0,.08); }
+body.is-waiting #StartBtn { width:300px !important; height:76px; border:5px solid #fff !important; border-radius:0 0 28px 28px !important; color:#fff !important; font-size:28px; background:repeating-linear-gradient(110deg,#cf6666 0,#cf6666 18px,#c15b5b 18px,#c15b5b 34px) !important; box-shadow:0 4px 0 #d8b0b0 !important; }
+body.is-waiting .RoomBox { height:calc(100vh - 232px) !important; min-height:0; border:0 !important; border-radius:0 !important; background:rgba(249,250,251,.84) !important; box-shadow:none !important; }
+body.is-waiting .RoomBox .product-title { display:none; }
+body.is-waiting .RoomBox .product-body { height:100% !important; padding:16px !important; }
+body.is-waiting .team-selector { position:absolute; top:12px; left:105px; width:240px !important; height:42px !important; border-radius:24px; background:#fff; }
+body.is-waiting .room-users { width:100% !important; padding-top:0; grid-template-columns:repeat(3,minmax(220px,1fr)); grid-auto-rows:202px; gap:14px; }
+body.is-waiting .room-user { height:174px !important; min-height:174px; padding:14px !important; border:0 !important; border-radius:16px !important; background:#fff !important; box-shadow:0 2px 2px rgba(0,0,0,.14) !important; }
+body.is-waiting .room-user-image { width:112px !important; height:112px !important; }
+body.is-waiting .ChatBox { position:fixed !important; top:96px; right:0; bottom:auto; width:280px !important; height:calc(100vh - 96px) !important; border-radius:0 !important; }
+body.is-waiting .ChatBox #Chat { height:calc(100% - 96px) !important; }
+
+body.is-gaming .reference-profile, body.is-gaming .reference-currency { display:none; }
+body.is-gaming #Top { height:36px !important; background:#292929 !important; }
+body.is-gaming #Middle { height:calc(100vh - 36px) !important; padding:0 !important; }
+body.is-gaming .kkutu-menu { min-height:46px; margin:0 !important; border:0; border-radius:0; background:#292929 !important; }
+body.is-gaming .GameBox { height:calc(100vh - 82px) !important; border:0 !important; border-radius:0 !important; background:rgba(225,244,217,.88) !important; box-shadow:none !important; }
+body.is-gaming .GameBox .product-title { display:none; }
+body.is-gaming .GameBox .product-body { height:100% !important; }
+body.is-gaming .ChatBox { display:none !important; }
+
+@media(max-width:1000px){
+  .reference-profile-copy{min-width:260px}.reference-level{width:190px}.reference-currency{gap:20px}
+  body.is-lobby #Middle{padding-left:250px !important}.reference-side-nav{width:210px}.reference-mascot{display:none !important}
+  body.is-lobby .RoomListBox,body.is-lobby .ShopBox,body.is-lobby .kkutu-menu{width:calc(100vw - 530px) !important}
+  body.is-waiting .room-users{grid-template-columns:repeat(2,minmax(210px,1fr))}
+}
