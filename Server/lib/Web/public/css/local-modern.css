@@ -804,6 +804,23 @@ body.is-gaming #Top { height:36px !important; background:#292929 !important; }
 body.is-gaming #Middle { height:calc(100vh - 36px) !important; padding:0 !important; }
 body.is-gaming .kkutu-menu { min-height:46px; margin:0 !important; border:0; border-radius:0; background:#292929 !important; }
 body.is-gaming .GameBox { height:calc(100vh - 82px) !important; border:0 !important; border-radius:0 !important; background:rgba(225,244,217,.88) !important; box-shadow:none !important; }
+.round-status {
+  position: absolute;
+  z-index: 18;
+  top: 12px;
+  left: 50%;
+  min-width: 220px;
+  padding: 8px 18px;
+  border: 2px solid rgba(34, 42, 38, .72);
+  border-radius: 0 0 14px 14px;
+  color: #26342e;
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 3px 8px rgba(30,50,35,.14);
+  transform: translateX(-50%);
+}
 body.is-gaming .GameBox .product-title { display:none; }
 body.is-gaming .GameBox .product-body { height:100% !important; }
 body.is-gaming .ChatBox { display:none !important; }

@@ -3855,13 +3855,16 @@ function clearBoard(){
 	$(".game-user-bomb").removeClass("game-user-bomb");
 }
 function drawRound(round){
-	var i;
+	var i, total = Number($data.room.round) || 0;
 	
 	$stage.game.round.empty();
-	for(i=0; i<$data.room.round; i++){
+	for(i=0; i<total; i++){
 		$stage.game.round.append($l = $("<label>").html($data.room.game.title[i]));
 		if((i+1) == round) $l.addClass("rounds-current");
 	}
+	$("#RoundStatus")
+		.text(round + " / " + total + " 라운드 · 남은 라운드 " + Math.max(0, total - round))
+		.show();
 }
 function turnGoing(){
 	route("turnGoing");
