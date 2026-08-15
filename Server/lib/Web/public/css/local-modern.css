@@ -576,7 +576,7 @@ body.is-waiting .team-selector {
 body.is-waiting .room-users {
   display: grid;
   grid-template-columns: repeat(4, minmax(190px, 1fr));
-  grid-auto-rows: minmax(180px, 1fr);
+  grid-auto-rows: 190px;
   box-sizing: border-box;
   width: calc(100% - 92px) !important;
   height: 100% !important;
@@ -584,7 +584,7 @@ body.is-waiting .room-users {
 }
 body.is-waiting .room-user {
   width: auto !important;
-  height: auto !important;
+  height: 190px !important;
   min-height: 180px;
   margin: 0 !important;
   padding: 14px !important;
@@ -611,7 +611,7 @@ body.is-gaming .kkutu-menu { min-height: 48px; margin-bottom: 8px !important; }
 body.is-gaming .GameBox {
   width: 100% !important;
   height: calc(100vh - 128px) !important;
-  min-height: 650px;
+  min-height: 0;
   margin: 0 !important;
 }
 body.is-gaming .GameBox .product-body { height: calc(100% - 38px) !important; }
@@ -626,5 +626,95 @@ body.is-gaming .game-body { bottom: 14px !important; }
   body.is-lobby .UserListBox { width: 30% !important; }
   body.is-lobby .RoomListBox, body.is-lobby .ShopBox { width: calc(70% - 10px) !important; margin-left: 10px !important; }
   body.is-lobby .ChatBox { width: 100% !important; margin-left: 0 !important; }
-  body.is-waiting .room-users { grid-template-columns: repeat(2, minmax(220px, 1fr)); overflow-y: auto; }
+  body.is-waiting .room-users { grid-template-columns: repeat(2, minmax(220px, 1fr)); grid-auto-rows: 190px; overflow-y: auto; }
+}
+
+/* Reference-matched game composition. Keep every element inside short screens. */
+body.is-gaming .game-head {
+  position: relative !important;
+  width: 100% !important;
+  height: 58% !important;
+  min-height: 0 !important;
+}
+body.is-gaming .GameBox .jjoriping {
+  position: absolute !important;
+  top: clamp(18px, 5vh, 54px) !important;
+  left: 50% !important;
+  width: min(520px, 54vw) !important;
+  margin: 0 !important;
+  transform: translateX(-50%);
+}
+body.is-gaming .GameBox .jjoDisplayBar {
+  width: 100% !important;
+  min-height: 0 !important;
+  padding: 25px 10px 10px !important;
+}
+body.is-gaming .GameBox .jjo-display,
+body.is-gaming .jjoDisplayBar .graph { width: 100% !important; }
+body.is-gaming .chain {
+  position: absolute !important;
+  top: clamp(26px, 6vh, 64px) !important;
+  left: calc(50% + min(330px, 34vw)) !important;
+  display: flex !important;
+  width: 92px !important;
+  height: 92px !important;
+  margin: 0 !important;
+  border: 4px solid #171c1b;
+  border-radius: 50%;
+  color: #fff !important;
+  font-size: 28px !important;
+  font-weight: 900;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 45% 35%, #4595ff, #1f66ca 70%) !important;
+  box-shadow: inset 0 0 0 6px #e7b453, 0 7px 0 rgba(44,55,49,.35);
+  filter: none !important;
+}
+body.is-gaming .chain:before {
+  content: "CHAIN";
+  position: absolute;
+  top: 17px;
+  left: 0;
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+}
+body.is-gaming .items {
+  position: absolute !important;
+  top: clamp(30px, 6vh, 68px) !important;
+  right: calc(50% + min(300px, 31vw)) !important;
+  left: auto !important;
+}
+body.is-gaming .history-holder {
+  position: absolute !important;
+  top: clamp(150px, 24vh, 220px) !important;
+  left: 50% !important;
+  width: min(980px, calc(100% - 50px)) !important;
+  transform: translateX(-50%);
+}
+body.is-gaming .game-input {
+  top: 47% !important;
+  width: min(640px, calc(100% - 40px)) !important;
+}
+body.is-gaming .game-body {
+  bottom: 8px !important;
+  max-width: calc(100% - 40px);
+  height: clamp(150px, 27vh, 205px) !important;
+}
+body.is-gaming .game-user {
+  height: clamp(140px, 24vh, 182px) !important;
+}
+@media (max-height: 760px) {
+  body.is-gaming .GameBox { height: calc(100vh - 116px) !important; }
+  body.is-gaming .GameBox .product-title { display: none; }
+  body.is-gaming .GameBox .product-body { height: 100% !important; }
+  body.is-gaming .GameBox .jjoriping { top: 14px !important; }
+  body.is-gaming .chain { top: 24px !important; transform: scale(.8); transform-origin: left top; }
+  body.is-gaming .game-input { top: 43% !important; }
+  body.is-gaming .game-body { height: 158px !important; }
+  body.is-gaming .game-user { height: 146px !important; }
+}
+@media (max-width: 900px) {
+  body.is-gaming .chain { left: auto !important; right: 18px; transform: scale(.72); transform-origin: right top; }
+  body.is-gaming .items { right: auto !important; left: 18px !important; }
 }
