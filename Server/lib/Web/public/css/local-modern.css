@@ -484,3 +484,150 @@ body.is-gaming .ChatBox #ChatBtn { width: 68px !important; }
   .game-input { width: calc(100% - 36px) !important; }
   body.is-gaming .ChatBox { right: 8px; bottom: 8px; width: 280px !important; }
 }
+
+/* Full-viewport lobby, waiting room and play surfaces */
+html, body { width: 100%; height: 100%; overflow: hidden; }
+#Top { position: relative; z-index: 30; width: 100% !important; }
+#Top:before { left: 24px !important; }
+#Middle {
+  box-sizing: border-box;
+  width: 100vw !important;
+  height: calc(100vh - 54px) !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 14px 18px 16px !important;
+  overflow: hidden;
+}
+#Middle:before { display: none !important; }
+.kkutu-menu {
+  box-sizing: border-box;
+  display: flex;
+  width: 100% !important;
+  min-height: 56px;
+  margin: 0 0 12px !important;
+  align-items: center;
+  gap: 6px;
+}
+.kkutu-menu button { min-width: 92px; min-height: 40px; font-size: 14px; }
+#Bottom { display: none !important; }
+
+/* Lobby: large room browser with a useful online-player rail */
+body.is-lobby .UserListBox,
+body.is-lobby .RoomListBox,
+body.is-lobby .ShopBox,
+body.is-lobby .MeBox,
+body.is-lobby .ChatBox {
+  box-sizing: border-box;
+  margin: 0 !important;
+}
+body.is-lobby .UserListBox {
+  width: 23% !important;
+  height: calc(100vh - 284px) !important;
+  min-height: 430px;
+}
+body.is-lobby .RoomListBox,
+body.is-lobby .ShopBox {
+  width: calc(77% - 12px) !important;
+  height: calc(100vh - 284px) !important;
+  min-height: 430px;
+  margin-left: 12px !important;
+}
+body.is-lobby .UserListBox .product-body,
+body.is-lobby .RoomListBox .product-body,
+body.is-lobby .ShopBox .product-body {
+  box-sizing: border-box;
+  width: 100% !important;
+  height: calc(100% - 42px) !important;
+  padding: 12px !important;
+}
+body.is-lobby .rooms-item {
+  min-height: 76px !important;
+  padding: 13px 16px !important;
+  font-size: 14px;
+}
+body.is-lobby .rooms-title { font-size: 16px !important; }
+body.is-lobby .users-item { width: 100% !important; height: 40px !important; }
+body.is-lobby .MeBox {
+  width: 23% !important;
+  height: 138px !important;
+  margin-top: 12px !important;
+}
+body.is-lobby .ChatBox {
+  width: calc(77% - 12px) !important;
+  height: 138px !important;
+  margin: 12px 0 0 12px !important;
+}
+body.is-lobby .ChatBox #Chat { height: 72px !important; }
+body.is-lobby .ChatBox #Talk { width: calc(100% - 105px) !important; margin-left: 9px !important; }
+
+/* Waiting room: player cards consume the available screen instead of 1080px */
+body.is-waiting .RoomBox {
+  width: 100% !important;
+  height: calc(100vh - 216px) !important;
+  min-height: 510px;
+  margin: 0 !important;
+}
+body.is-waiting .RoomBox .product-body {
+  height: calc(100% - 42px) !important;
+  padding: 18px !important;
+}
+body.is-waiting .team-selector {
+  width: 74px !important;
+  height: calc(100% - 6px) !important;
+}
+body.is-waiting .room-users {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(190px, 1fr));
+  grid-auto-rows: minmax(180px, 1fr);
+  box-sizing: border-box;
+  width: calc(100% - 92px) !important;
+  height: 100% !important;
+  gap: 12px;
+}
+body.is-waiting .room-user {
+  width: auto !important;
+  height: auto !important;
+  min-height: 180px;
+  margin: 0 !important;
+  padding: 14px !important;
+}
+body.is-waiting .room-user-image { width: 112px !important; height: 112px !important; }
+body.is-waiting .room-user-stat { width: calc(100% - 140px) !important; }
+body.is-waiting .room-user-title { width: calc(100% - 12px) !important; }
+body.is-waiting .MeBox { display: none !important; }
+body.is-waiting .ChatBox {
+  position: fixed !important;
+  z-index: 15;
+  right: 18px;
+  bottom: 16px;
+  width: min(560px, calc(100vw - 36px)) !important;
+  height: 150px !important;
+  margin: 0 !important;
+}
+body.is-waiting .ChatBox #Chat { height: 82px !important; }
+body.is-waiting .ChatBox #Talk { width: calc(100% - 105px) !important; margin-left: 9px !important; }
+
+/* Game surface fills the browser below the top controls */
+body.is-gaming #Middle { padding: 8px 12px 10px !important; }
+body.is-gaming .kkutu-menu { min-height: 48px; margin-bottom: 8px !important; }
+body.is-gaming .GameBox {
+  width: 100% !important;
+  height: calc(100vh - 128px) !important;
+  min-height: 650px;
+  margin: 0 !important;
+}
+body.is-gaming .GameBox .product-body { height: calc(100% - 38px) !important; }
+body.is-gaming .game-head { min-height: 48% !important; }
+body.is-gaming .game-input { top: 48% !important; width: min(760px, calc(100% - 40px)) !important; }
+body.is-gaming .game-body { bottom: 14px !important; }
+
+/* Dialogs stay readable on large and small displays */
+.dialog { max-width: calc(100vw - 28px) !important; max-height: calc(100vh - 28px) !important; }
+@media (max-width: 1000px) {
+  #Middle { overflow-y: auto; }
+  body.is-lobby .UserListBox { width: 30% !important; }
+  body.is-lobby .RoomListBox, body.is-lobby .ShopBox { width: calc(70% - 10px) !important; margin-left: 10px !important; }
+  body.is-lobby .MeBox { width: 30% !important; }
+  body.is-lobby .ChatBox { width: calc(70% - 10px) !important; margin-left: 10px !important; }
+  body.is-waiting .room-users { grid-template-columns: repeat(2, minmax(220px, 1fr)); overflow-y: auto; }
+}

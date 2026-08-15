@@ -2693,7 +2693,10 @@ function updateUI(myRoom, refresh){
 	if($data._replay) return;
 	if(only == "for-gaming" && !myRoom) return;
 	if($data.practicing) only = "for-gaming";
-	$("body").toggleClass("is-gaming", only == "for-gaming");
+	$("body")
+		.toggleClass("is-gaming", only == "for-gaming")
+		.toggleClass("is-lobby", only == "for-lobby")
+		.toggleClass("is-waiting", only == "for-master" || only == "for-normal");
 	
 	$(".kkutu-menu button").hide();
 	for(i in $stage.box) $stage.box[i].hide();
