@@ -85,7 +85,6 @@
         target.empty().append(source.children().clone()).addClass('has-moremi');
       }
     };
-    new MutationObserver(syncReferenceUI).observe(document.body, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
     window.setInterval(syncReferenceUI, 800);
     syncReferenceUI();
     mount();
