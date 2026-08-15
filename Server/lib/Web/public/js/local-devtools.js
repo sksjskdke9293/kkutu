@@ -63,10 +63,31 @@
 
   $(function () {
     $('#ReferenceQuick').on('click', function () { $('#QuickRoomBtn').trigger('click'); });
-    $('#ReferenceFriendly').on('click', function () { $('#RoomListBtn, #QuickRoomBtn').first().trigger('click'); });
+    $('#ReferenceFriendly').on('click', function () { $('body').removeClass('reference-home'); });
     $('#ReferenceDictionary').on('click', function () { $('#DictionaryBtn').trigger('click'); });
     $('#ReferenceRank').on('click', function () { $('#LeaderboardBtn').trigger('click'); });
     $('#ReferenceStorage').on('click', function () { $('.MeBox').trigger('click'); });
+    $('#InviteBtn').off('click').text('AI 초대').on('click', function () {
+      if (typeof window.requestInvite === 'function') window.requestInvite('AI');
+      else $('#invite-robot').trigger('click');
+    });
+
+    var wasLobby = false;
+    var syncReferenceUI = function () {
+      var lobby = $('body').hasClass('is-lobby');
+      if (lobby && !wasLobby) $('body').addClass('reference-home');
+      if (!lobby) $('body').removeClass('reference-home');
+      wasLobby = lobby;
+
+      var source = $('.my-image');
+      var target = $('.reference-mascot-body');
+      if (source.length && source.children().length && target.children().length !== source.children().length) {
+        target.empty().append(source.children().clone()).addClass('has-moremi');
+      }
+    };
+    new MutationObserver(syncReferenceUI).observe(document.body, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
+    window.setInterval(syncReferenceUI, 800);
+    syncReferenceUI();
     mount();
   });
 })();
