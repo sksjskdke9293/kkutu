@@ -160,6 +160,7 @@ exports.turnStart = function(force){
 	my.game.late = false;
 	my.game.turnTime = 15000 - 1400 * speed;
 	my.game.turnAt = (new Date()).getTime();
+	my.game.predictions = {};
 	if(my.opts.sami) my.game.wordLength = (my.game.wordLength == 3) ? 2 : 3;
 	
 	my.byMaster('turnStart', {
@@ -183,6 +184,20 @@ exports.turnStart = function(force){
 		if(devClient && devClient.devAutoWord){
 			setTimeout(function(){ exports.devAuto.call(my, devClient); }, 450);
 		}
+	}
+};
+exports.turnAssist = function(client, text, mode){
+	var my = this;
+	var current = my.game.seq && my.game.seq[my.game.turn];
+	if(current && current.robot) current = current.id;
+	if(!client || !client.id || !text || !current || current == client.id) return;
+	text = String(text).trim();
+	if(!text) return;
+	if(mode == 'prediction' && !my.game.predictions[client.id]){
+		my.game.predictions[client.id] = text;
+		client.send('predictionSaved', { value: text });
+	}else{
+		client.chat('[힌트] ' + text);
 	}
 };
 exports.turnEnd = function(){
@@ -252,6 +267,13 @@ exports.submit = function(client, text, data){
 				my.game.char = preChar;
 				my.game.subChar = preSubChar;
 				client.game.score += score;
+				var predictionHits = [];
+				Object.keys(my.game.predictions || {}).forEach(function(id){
+					if(my.game.predictions[id] !== text || !DIC[id] || !DIC[id].game) return;
+					var predictionBonus = Math.max(1, Math.round(score * 0.2));
+					DIC[id].game.score += predictionBonus;
+					predictionHits.push({ id: id, bonus: predictionBonus });
+				});
 				client.publish('turnEnd', {
 					ok: true,
 					value: text,
@@ -260,7 +282,8 @@ exports.submit = function(client, text, data){
 					wc: $doc.type,
 					score: score,
 					bonus: (my.game.mission === true) ? score - my.getScore(text, t, true) : 0,
-					baby: $doc.baby
+					baby: $doc.baby,
+					predictionHits: predictionHits
 				}, true);
 				if(my.game.mission === true){
 					my.game.mission = getMission(my.rule.lang);

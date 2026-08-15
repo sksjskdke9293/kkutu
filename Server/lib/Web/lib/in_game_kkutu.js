@@ -205,6 +205,9 @@ $(document).ready(function(){
 			round: $(".rounds"),
 			here: $(".game-input").hide(),
 			hereText: $("#game-input"),
+			submit: $("#GameSubmitBtn"),
+			inputLabel: $("#turn-input-label"),
+			inputHelp: $("#turn-input-help"),
 			history: $(".history"),
 			roundBar: $(".jjo-round-time .graph-bar"),
 			turnBar: $(".jjo-turn-time .graph-bar")
@@ -333,18 +336,13 @@ $(document).ready(function(){
 	$stage.chatBtn.on('click', function(e){
 		checkInput();
 		
-		var value = (mobile && $stage.game.here.is(':visible'))
-			? $stage.game.hereText.val()
-			: $stage.talk.val();
+		var value = $stage.talk.val();
 		if(!value) return;
 		var o = { value: value.trim() };
 		if(o.value[0] == "/"){
 			o.cmd = o.value.split(" ");
 			runCommand(o.cmd);
 		}else{
-			if($stage.game.here.is(":visible") || $data._relay){
-				o.relay = true;
-			}
 			send('talk', o);
 		}
 		if($data._whisper){
@@ -353,8 +351,16 @@ $(document).ready(function(){
 		}else{
 			$stage.talk.val("");
 		}
+	}).hotkey($stage.talk, 13);
+	function submitGameInput(){
+		var value = $stage.game.hereText.val().trim();
+		if(!value || !$data.room || !$data.room.gaming) return;
+		if($data._tid == $data.id) send('talk', { value: value, relay: true });
+		else send('turnAssist', { value: value, mode: $data._predictionSent ? 'hint' : 'prediction' });
 		$stage.game.hereText.val("");
-	}).hotkey($stage.talk, 13).hotkey($stage.game.hereText, 13);
+		if($data._tid != $data.id) setTurnInputMode('hint');
+	}
+	$stage.game.submit.on('click', submitGameInput).hotkey($stage.game.hereText, 13);
 	$("#cw-q-input").on('keydown', function(e){
 		if(e.keyCode == 13){
 			var $target = $(e.currentTarget);
@@ -390,10 +396,7 @@ $(document).ready(function(){
 		}
 	});
 	$stage.game.here.on('click', function(e){
-		mobile || $stage.talk.focus();
-	});
-	$stage.talk.on('keyup', function(e){
-		$stage.game.hereText.val($stage.talk.val());
+		if(e.target.id != 'GameSubmitBtn') $stage.game.hereText.focus();
 	});
 	$(window).on('beforeunload', function(e){
 		if($data.room) return L['sureExit'];
@@ -1093,10 +1096,13 @@ $lib.Classic.turnStart = function(data){
 	$stage.game.display.html($data._char = getCharText(data.char, data.subChar, data.wordLength));
 	$("#game-user-"+data.id).addClass("game-user-current");
 	if(!$data._replay){
-		$stage.game.here.css('display', (data.id == $data.id) ? "block" : "none");
+		$data._predictionSent = false;
+		$stage.game.here.css('display', "block");
 		if(data.id == $data.id){
-			if(mobile) $stage.game.hereText.val("").focus();
-			else $stage.talk.focus();
+			setTurnInputMode('word');
+			$stage.game.hereText.val("").focus();
+		}else{
+			setTurnInputMode('prediction');
 		}
 	}
 	$stage.game.items.html($data.mission = data.mission);
@@ -1115,6 +1121,27 @@ $lib.Classic.turnStart = function(data){
 		data: data
 	});
 };
+function setTurnInputMode(mode){
+	if(!$stage.game || !$stage.game.here) return;
+	$stage.game.here.removeClass('mode-word mode-prediction mode-hint').addClass('mode-' + mode);
+	if(mode == 'word'){
+		$stage.game.inputLabel.text('내 차례');
+		$stage.game.hereText.attr('placeholder', '이어지는 단어를 입력하세요');
+		$stage.game.submit.text('제출');
+		$stage.game.inputHelp.text('정답 단어를 입력하면 점수를 얻습니다.');
+	}else if(mode == 'prediction'){
+		$stage.game.inputLabel.text('다음 단어 예측');
+		$stage.game.hereText.attr('placeholder', '상대가 낼 단어를 예측하세요');
+		$stage.game.submit.text('예측');
+		$stage.game.inputHelp.text('예측 성공 시 그 단어 점수의 20%를 받습니다.');
+	}else{
+		$data._predictionSent = true;
+		$stage.game.inputLabel.text('힌트 주기');
+		$stage.game.hereText.attr('placeholder', '다른 플레이어에게 힌트를 보내세요');
+		$stage.game.submit.text('힌트');
+		$stage.game.inputHelp.text('힌트는 채팅에 표시됩니다.');
+	}
+}
 $lib.Classic.turnGoing = function(){
 	if(!$data.room) clearInterval($data._tTime);
 	$data._turnTime -= TICK;
@@ -2259,7 +2286,17 @@ function onMessage(data){
 				if(data.baby){
 					playSound('success');
 				}
+				(data.predictionHits || []).forEach(function(hit){
+					addScore(hit.id, Number(hit.bonus));
+					updateScore(hit.id, getScore(hit.id));
+					if(hit.id == $data.id) notice('예측 성공! +' + hit.bonus + '점 (20% 보너스)');
+				});
 			}
+			break;
+		case 'predictionSaved':
+			$data._predictionSent = true;
+			if(typeof setTurnInputMode == 'function') setTurnInputMode('hint');
+			notice('예측 저장: ' + data.value);
 			break;
 		case 'roundEnd':
 			for(i in data.users){
@@ -2656,6 +2693,7 @@ function updateUI(myRoom, refresh){
 	if($data._replay) return;
 	if(only == "for-gaming" && !myRoom) return;
 	if($data.practicing) only = "for-gaming";
+	$("body").toggleClass("is-gaming", only == "for-gaming");
 	
 	$(".kkutu-menu button").hide();
 	for(i in $stage.box) $stage.box[i].hide();

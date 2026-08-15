@@ -44,10 +44,13 @@ $lib.Classic.turnStart = function(data){
 	$stage.game.display.html($data._char = getCharText(data.char, data.subChar, data.wordLength));
 	$("#game-user-"+data.id).addClass("game-user-current");
 	if(!$data._replay){
-		$stage.game.here.css('display', (data.id == $data.id) ? "block" : "none");
+		$data._predictionSent = false;
+		$stage.game.here.css('display', "block");
 		if(data.id == $data.id){
-			if(mobile) $stage.game.hereText.val("").focus();
-			else $stage.talk.focus();
+			setTurnInputMode('word');
+			$stage.game.hereText.val("").focus();
+		}else{
+			setTurnInputMode('prediction');
 		}
 	}
 	$stage.game.items.html($data.mission = data.mission);
@@ -66,6 +69,27 @@ $lib.Classic.turnStart = function(data){
 		data: data
 	});
 };
+function setTurnInputMode(mode){
+	if(!$stage.game || !$stage.game.here) return;
+	$stage.game.here.removeClass('mode-word mode-prediction mode-hint').addClass('mode-' + mode);
+	if(mode == 'word'){
+		$stage.game.inputLabel.text('내 차례');
+		$stage.game.hereText.attr('placeholder', '이어지는 단어를 입력하세요');
+		$stage.game.submit.text('제출');
+		$stage.game.inputHelp.text('정답 단어를 입력하면 점수를 얻습니다.');
+	}else if(mode == 'prediction'){
+		$stage.game.inputLabel.text('다음 단어 예측');
+		$stage.game.hereText.attr('placeholder', '상대가 낼 단어를 예측하세요');
+		$stage.game.submit.text('예측');
+		$stage.game.inputHelp.text('예측 성공 시 그 단어 점수의 20%를 받습니다.');
+	}else{
+		$data._predictionSent = true;
+		$stage.game.inputLabel.text('힌트 주기');
+		$stage.game.hereText.attr('placeholder', '다른 플레이어에게 힌트를 보내세요');
+		$stage.game.submit.text('힌트');
+		$stage.game.inputHelp.text('힌트는 채팅에 표시됩니다.');
+	}
+}
 $lib.Classic.turnGoing = function(){
 	if(!$data.room) clearInterval($data._tTime);
 	$data._turnTime -= TICK;

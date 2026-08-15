@@ -386,7 +386,17 @@ function onMessage(data){
 				if(data.baby){
 					playSound('success');
 				}
+				(data.predictionHits || []).forEach(function(hit){
+					addScore(hit.id, Number(hit.bonus));
+					updateScore(hit.id, getScore(hit.id));
+					if(hit.id == $data.id) notice('예측 성공! +' + hit.bonus + '점 (20% 보너스)');
+				});
 			}
+			break;
+		case 'predictionSaved':
+			$data._predictionSent = true;
+			if(typeof setTurnInputMode == 'function') setTurnInputMode('hint');
+			notice('예측 저장: ' + data.value);
 			break;
 		case 'roundEnd':
 			for(i in data.users){
@@ -783,6 +793,7 @@ function updateUI(myRoom, refresh){
 	if($data._replay) return;
 	if(only == "for-gaming" && !myRoom) return;
 	if($data.practicing) only = "for-gaming";
+	$("body").toggleClass("is-gaming", only == "for-gaming");
 	
 	$(".kkutu-menu button").hide();
 	for(i in $stage.box) $stage.box[i].hide();

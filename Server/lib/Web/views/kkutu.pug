@@ -433,7 +433,11 @@ block Middle
 				div.history
 		div.game-body
 		div.game-input
-			input#game-input(placeholder=L('yourTurn')+' '+L('inputChat'), readonly)
+			div#turn-input-label 내 차례
+			div.turn-input-row
+				input#game-input(placeholder='단어를 입력하세요', maxlength=120)
+				button#GameSubmitBtn(type='button') 제출
+			div#turn-input-help 채팅은 오른쪽 채팅창에서 입력할 수 있어요.
 	+Product('Me')
 		div.moremi.my-image
 		div.my-stat

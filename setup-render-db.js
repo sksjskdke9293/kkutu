@@ -67,6 +67,11 @@ async function importDump(db) {
   } else {
     console.log('Database schema already exists; skipping seed import.');
   }
+  await db.query(`INSERT INTO kkutu_ko (_id, type, mean, hit, flag, theme)
+    VALUES ('역스윕', '1', '불리한 상황을 뒤집어 연속으로 승리하는 일.', 0, 0, '게임'),
+           ('윕쌀', '1', '끄투 사용자 추가 단어.', 0, 0, '기타')
+    ON CONFLICT (_id) DO UPDATE SET type = EXCLUDED.type, mean = EXCLUDED.mean, theme = EXCLUDED.theme`);
+  console.log('Custom words are ready: 역스윕, 윕쌀');
   await db.end();
 })().catch(error => {
   console.error(error);

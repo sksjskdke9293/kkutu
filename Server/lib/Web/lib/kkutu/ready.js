@@ -150,6 +150,9 @@ $(document).ready(function(){
 			round: $(".rounds"),
 			here: $(".game-input").hide(),
 			hereText: $("#game-input"),
+			submit: $("#GameSubmitBtn"),
+			inputLabel: $("#turn-input-label"),
+			inputHelp: $("#turn-input-help"),
 			history: $(".history"),
 			roundBar: $(".jjo-round-time .graph-bar"),
 			turnBar: $(".jjo-turn-time .graph-bar")
@@ -278,18 +281,13 @@ $(document).ready(function(){
 	$stage.chatBtn.on('click', function(e){
 		checkInput();
 		
-		var value = (mobile && $stage.game.here.is(':visible'))
-			? $stage.game.hereText.val()
-			: $stage.talk.val();
+		var value = $stage.talk.val();
 		if(!value) return;
 		var o = { value: value.trim() };
 		if(o.value[0] == "/"){
 			o.cmd = o.value.split(" ");
 			runCommand(o.cmd);
 		}else{
-			if($stage.game.here.is(":visible") || $data._relay){
-				o.relay = true;
-			}
 			send('talk', o);
 		}
 		if($data._whisper){
@@ -298,8 +296,16 @@ $(document).ready(function(){
 		}else{
 			$stage.talk.val("");
 		}
+	}).hotkey($stage.talk, 13);
+	function submitGameInput(){
+		var value = $stage.game.hereText.val().trim();
+		if(!value || !$data.room || !$data.room.gaming) return;
+		if($data._tid == $data.id) send('talk', { value: value, relay: true });
+		else send('turnAssist', { value: value, mode: $data._predictionSent ? 'hint' : 'prediction' });
 		$stage.game.hereText.val("");
-	}).hotkey($stage.talk, 13).hotkey($stage.game.hereText, 13);
+		if($data._tid != $data.id) setTurnInputMode('hint');
+	}
+	$stage.game.submit.on('click', submitGameInput).hotkey($stage.game.hereText, 13);
 	$("#cw-q-input").on('keydown', function(e){
 		if(e.keyCode == 13){
 			var $target = $(e.currentTarget);
@@ -335,10 +341,7 @@ $(document).ready(function(){
 		}
 	});
 	$stage.game.here.on('click', function(e){
-		mobile || $stage.talk.focus();
-	});
-	$stage.talk.on('keyup', function(e){
-		$stage.game.hereText.val($stage.talk.val());
+		if(e.target.id != 'GameSubmitBtn') $stage.game.hereText.focus();
 	});
 	$(window).on('beforeunload', function(e){
 		if($data.room) return L['sureExit'];

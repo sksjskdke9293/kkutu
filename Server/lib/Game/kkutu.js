@@ -1315,6 +1315,10 @@ exports.Room = function(room, channel){
 	my.submit = function(client, text, data){
 		return my.route("submit", client, text, data);
 	};
+	my.turnAssist = function(client, text, mode){
+		if(!my.gaming || !my.rule || my.rule.rule != "Classic") return;
+		return my.route("turnAssist", client, text, mode);
+	};
 	my.getScore = function(text, delay, ignoreMission){
 		return my.routeSync("getScore", text, delay, ignoreMission);
 	};

@@ -273,6 +273,13 @@ KKuTu.onClientMessage = function($c, msg){
 				}
 			}
 			break;
+		case 'turnAssist':
+			if(!msg.value || !msg.value.substr) return;
+			if($c.subPlace) temp = $c.pracRoom;
+			else if(!(temp = ROOM[$c.place])) return;
+			if(!temp.gaming || !temp.turnAssist) return;
+			temp.turnAssist($c, msg.value.substr(0, 40), msg.mode);
+			break;
 		case 'enter':
 		case 'setRoom':
 			if(!msg.title) stable = false;
