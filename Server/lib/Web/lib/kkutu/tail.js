@@ -20,7 +20,9 @@ window.KKuTuLocalDev = {
 	autoWord: false,
 	run: function(action, amount){
 		var me = $data.users && $data.users[$data.id];
+		var practice = !!($data.room && $data.room.practice);
 		amount = Number(amount) || 0;
+		if(practice && ['money', 'xp', 'robot', 'fakeRobot', 'readyStart'].indexOf(action) != -1) return false;
 		if(action == 'robot'){
 			send('invite', { target: 'AI' });
 			return true;
@@ -53,7 +55,9 @@ window.KKuTuLocalDev = {
 		}
 		return true;
 	},
-	ready: function(){ return !!($data && $data.id && $data.admin); }
+	ready: function(){
+		return !!($data && $data.id && ($data.admin || ($data.room && $data.room.practice)));
+	}
 };
 
 delete window.WebSocket;

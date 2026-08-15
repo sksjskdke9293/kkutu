@@ -985,6 +985,10 @@ exports.Room = function(room, channel){
 		if(my.practice){
 			clearTimeout(my.game.turnTimer);
 			client.subPlace = 0;
+			if(!client.admin){
+				client.devAutoWord = false;
+				client.devFakeBot = false;
+			}
 		}else client.place = 0;
 		
 		if(Cluster.isWorker){

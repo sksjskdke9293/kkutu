@@ -194,15 +194,18 @@ KKuTu.onClientMessage = function($c, msg){
 	switch(msg.type){
 		case 'dev':
 			if(!GLOBAL.PUBLIC_DEVTOOLS) return;
-			if(!$c.admin) return;
-			temp = ROOM[$c.place];
+			var practiceDev = !!($c.subPlace && $c.pracRoom && $c.pracRoom.practice);
+			if(!$c.admin && !practiceDev) return;
+			temp = practiceDev ? $c.pracRoom : ROOM[$c.place];
 			switch(msg.action){
 				case 'money':
+					if(!$c.admin) return;
 					$c.money = Math.max(0, $c.money + Math.min(1000000, Number(msg.amount) || 0));
 					$c.flush();
 					$c.chat('[DEV] 핑이 지급되었습니다.', 1);
 					break;
 				case 'xp':
+					if(!$c.admin) return;
 					$c.data.score = Math.max(0, $c.data.score + Math.min(1000000, Number(msg.amount) || 0));
 					$c.flush();
 					$c.chat('[DEV] 경험치가 지급되었습니다.', 1);
@@ -217,6 +220,7 @@ KKuTu.onClientMessage = function($c, msg){
 					$c.chat('[DEV] 자동 단어 ' + ($c.devAutoWord ? 'ON' : 'OFF'), 1);
 					break;
 				case 'fakeRobot':
+					if(practiceDev) return;
 					if(!temp || temp.gaming || temp.master != $c.id) return;
 					temp.addAI($c, true);
 					break;

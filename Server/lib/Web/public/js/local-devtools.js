@@ -53,6 +53,13 @@
       .on('click', function () { if (api()) panel.toggleClass('open'); });
     $('body').append(toggle, panel);
 
+    (function syncAccess() {
+      var allowed = !!(window.KKuTuLocalDev && window.KKuTuLocalDev.ready());
+      toggle.toggle(allowed);
+      if (!allowed) panel.removeClass('open');
+      window.setTimeout(syncAccess, 500);
+    })();
+
     window.addEventListener('keydown', function (event) {
       if (event.code !== 'Backquote' && event.key !== '`' && event.key !== '~') return;
       if (!api()) return;
