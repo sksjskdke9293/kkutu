@@ -29,6 +29,7 @@
       window.setTimeout(mount, 500);
       return;
     }
+
     var panel = $('<aside id="LocalDevPanel">')
       .append($('<div class="dev-head">').append('<b>운영자 패널</b><span>ADMIN</span>'))
       .append($('<div class="dev-grid">')
@@ -85,8 +86,10 @@
         target.empty().append(source.children().clone()).addClass('has-moremi');
       }
     };
-    window.setInterval(syncReferenceUI, 800);
-    syncReferenceUI();
     mount();
+    (function refreshReferenceUI() {
+      syncReferenceUI();
+      window.setTimeout(refreshReferenceUI, 800);
+    })();
   });
 })();
