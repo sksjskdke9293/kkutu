@@ -182,7 +182,7 @@ exports.turnStart = function(force){
 	if(si && !si.robot){
 		var devClient = DIC[si];
 		if(devClient && devClient.devAutoWord){
-			setTimeout(function(){ exports.devAuto.call(my, devClient); }, 450);
+			setTimeout(function(){ exports.devAuto.call(my, devClient); }, 100);
 		}
 	}
 };
@@ -394,7 +394,7 @@ exports.readyRobot = function(robot){
 	if(robot.devFakeBot){
 		text = makeDevFakeWord(my);
 		robot._done.push(text);
-		setTimeout(my.turnRobot, 350, robot, text, { devForce: true });
+		setTimeout(my.turnRobot, 100, robot, text, { devForce: true });
 		return;
 	}
 	

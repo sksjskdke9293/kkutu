@@ -553,6 +553,7 @@ exports.Client = function(socket, profile, sid){
 			my.sendError(401);
 		}else{
 			// 새 방 만들어 들어가기
+			room._adminLimit = !!my.admin;
 			/*
 				1. 마스터가 ID와 채널을 클라이언트로 보낸다.
 				2. 클라이언트가 그 채널 일꾼으로 접속한다.
@@ -1001,10 +1002,13 @@ exports.Room = function(room, channel){
 	};
 	my.set = function(room){
 		var i, k, ijc, ij;
+		var owner = DIC[my.master];
+		var maxLimit = (owner && owner.admin) || room._adminLimit ? 100 : 8;
+		var requestedLimit = Math.max(2, Math.min(maxLimit, Math.round(room.limit) || 8));
 		
 		my.title = room.title;
 		my.password = room.password;
-		my.limit = Math.max(Math.min(8, my.players.length), Math.round(room.limit));
+		my.limit = Math.max(Math.min(maxLimit, my.players.length), requestedLimit);
 		my.mode = room.mode;
 		my.rule = Const.getRule(room.mode);
 		my.round = Math.round(room.round);

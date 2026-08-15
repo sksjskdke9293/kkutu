@@ -378,8 +378,9 @@ $(document).ready(function(){
 	$("#room-limit").on('change', function(e){
 		var $target = $(e.currentTarget);
 		var value = $target.val();
+		var max = $data.admin ? 100 : 8;
 		
-		if(value < 2 || value > 8){
+		if(value < 2 || value > max){
 			$target.css('color', "#FF4444");
 		}else{
 			$target.css('color', "");
@@ -448,6 +449,7 @@ $(document).ready(function(){
 		var $d;
 		
 		$stage.dialog.quick.hide();
+		$("#room-limit").attr('max', $data.admin ? 100 : 8);
 		
 		$data.typeRoom = 'enter';
 		showDialog($d = $stage.dialog.room);
@@ -459,6 +461,7 @@ $(document).ready(function(){
 		var i, k;
 		
 		$data.typeRoom = 'setRoom';
+		$("#room-limit").attr('max', $data.admin ? 100 : 8);
 		$("#room-title").val($data.room.title);
 		$("#room-limit").val($data.room.limit);
 		$("#room-mode").val($data.room.mode).trigger('change');
