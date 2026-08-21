@@ -6,7 +6,7 @@ services:
     region: singapore
     buildCommand: cd Server/lib && npm install && npx grunt default pack && cd ../.. && node setup-render-db.js
     startCommand: node render-entry.js
-    healthCheckPath: /
+    healthCheckPath: /healthz
     envVars:
       - key: NODE_ENV
         value: production
