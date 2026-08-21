@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const { Client } = require('./Server/lib/node_modules/pg');
+const { upsertModernWords } = require('./modern-words');
 
 const connection = { host: '127.0.0.1', port: 55432, user: 'postgres', password: 'kkutu-local' };
 const decode = value => value === '\\N' ? null : value.replace(/\\([btnrfv\\])/g, (_, c) => ({ b: '\b', t: '\t', n: '\n', r: '\r', f: '\f', v: '\v', '\\': '\\' })[c]);
@@ -49,7 +50,7 @@ async function importDump(db) {
 
 (async () => {
   const marker = path.join(__dirname, 'runtime', 'db-ready');
-  if (fs.existsSync(marker)) return;
+  const initialized = fs.existsSync(marker);
   const admin = new Client({ ...connection, database: 'postgres' });
   await admin.connect();
   const found = await admin.query("SELECT 1 FROM pg_database WHERE datname = 'main'");
@@ -58,8 +59,7 @@ async function importDump(db) {
 
   let db = new Client({ ...connection, database: 'main' });
   await db.connect();
-  const ready = false;
-  if (!ready) {
+  if (!initialized) {
     await db.end();
     const reset = new Client({ ...connection, database: 'postgres' });
     await reset.connect();
@@ -72,6 +72,7 @@ async function importDump(db) {
     await importDump(db);
     fs.writeFileSync(marker, 'ok\n');
   }
+  await upsertModernWords(db);
   await db.end();
 })().catch(error => {
   console.error(error);
