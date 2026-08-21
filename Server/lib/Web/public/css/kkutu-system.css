@@ -1,0 +1,173 @@
+/* KKuTu System UI — one visual language for lobby, rooms, games and dialogs. */
+:root {
+  --ks-bg: #f3f7f5;
+  --ks-surface: rgba(255, 255, 255, .94);
+  --ks-surface-solid: #fff;
+  --ks-soft: #edf4f1;
+  --ks-line: #dce7e2;
+  --ks-text: #152821;
+  --ks-muted: #6f817a;
+  --ks-primary: #20ad78;
+  --ks-primary-dark: #16845c;
+  --ks-blue: #4384dd;
+  --ks-danger: #e26767;
+  --ks-radius: 18px;
+  --ks-shadow: 0 16px 44px rgba(29, 66, 52, .12);
+}
+
+* { box-sizing: border-box; }
+html, body { width: 100%; min-width: 0; min-height: 100%; }
+body {
+  color: var(--ks-text) !important;
+  background:
+    radial-gradient(circle at 8% 0, rgba(95, 211, 165, .16), transparent 28%),
+    radial-gradient(circle at 92% 12%, rgba(92, 157, 231, .12), transparent 30%),
+    var(--ks-bg) !important;
+}
+#Background { opacity: .035 !important; filter: grayscale(1) !important; }
+
+/* Global shell */
+#Top {
+  height: 82px !important;
+  border-bottom: 1px solid var(--ks-line) !important;
+  background: rgba(255,255,255,.88) !important;
+  box-shadow: 0 8px 28px rgba(31, 68, 54, .06) !important;
+  backdrop-filter: blur(18px);
+}
+#Middle {
+  width: 100% !important;
+  max-width: none !important;
+  height: calc(100vh - 82px) !important;
+  min-height: 0;
+}
+.reference-profile { top: 9px; left: 22px; height: 64px; }
+.reference-face { width: 50px; height: 50px; border: 1px solid var(--ks-line); color: var(--ks-primary); background: var(--ks-soft); }
+.reference-profile-copy strong { color: var(--ks-text); font-size: 20px; }
+.reference-profile-copy span { color: var(--ks-muted); }
+.reference-level { height: 10px; border: 0; background: #e5f4ed; box-shadow: inset 0 0 0 1px #cce9dc; }
+
+/* Navigation and actions */
+.reference-side-nav { top: 50%; left: 24px; width: 206px; transform: translateY(-50%); }
+.reference-side-nav button {
+  width: 100%; height: 48px; margin: 7px 0; padding: 0 18px;
+  border: 1px solid transparent; border-radius: 14px;
+  color: #52645d; font-size: 16px; background: rgba(255,255,255,.72);
+  box-shadow: 0 5px 18px rgba(31,68,54,.05);
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.reference-side-nav button:hover { transform: translateX(4px); border-color: #bce3d3; background: #fff; }
+.reference-side-nav button:nth-child(2),
+.reference-side-nav button:nth-child(3),
+.reference-side-nav button:nth-child(4) { color: var(--ks-primary-dark); background: #e9f8f2; }
+.kkutu-menu button, .dialog button, #ChatBtn {
+  min-height: 38px; border: 1px solid var(--ks-line) !important; border-radius: 11px !important;
+  color: var(--ks-text) !important; background: var(--ks-surface-solid) !important;
+  box-shadow: 0 5px 14px rgba(29,66,52,.06) !important;
+}
+#NewRoomBtn, #StartBtn, #ReadyBtn, #room-ok, #quick-ok {
+  border-color: transparent !important; color: #fff !important;
+  background: linear-gradient(135deg, var(--ks-primary), #3dcf98) !important;
+}
+#ExitBtn { color: #b34d4d !important; background: #fff2f2 !important; }
+
+/* Lobby */
+body.is-lobby #Middle { padding: 18px 300px 18px 270px !important; }
+body.is-lobby .reference-mascot { left: 26%; }
+body.is-lobby .kkutu-menu,
+body.is-lobby .RoomListBox,
+body.is-lobby .ShopBox {
+  width: calc(100vw - 570px) !important;
+  max-width: 1100px;
+}
+body.is-lobby .kkutu-menu {
+  min-height: 98px; border: 1px solid var(--ks-line) !important;
+  border-radius: var(--ks-radius) var(--ks-radius) 0 0 !important;
+  background: var(--ks-surface) !important;
+}
+body.is-lobby .kkutu-menu:before { color: var(--ks-text); font-size: 20px; }
+body.is-lobby .kkutu-menu:after { color: var(--ks-muted); }
+body.is-lobby .RoomListBox, body.is-lobby .ShopBox {
+  height: calc(100vh - 216px) !important; border: 1px solid var(--ks-line) !important;
+  border-top: 0 !important; border-radius: 0 0 var(--ks-radius) var(--ks-radius) !important;
+  background: var(--ks-surface) !important; box-shadow: var(--ks-shadow) !important;
+}
+body.is-lobby .RoomListBox .product-body, body.is-lobby .ShopBox .product-body { padding: 12px !important; background: transparent !important; }
+body.is-lobby .rooms-item {
+  min-height: 58px !important; margin: 7px 0 !important; padding: 12px 16px !important;
+  border: 1px solid var(--ks-line) !important; border-radius: 13px !important;
+  box-shadow: none !important; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+body.is-lobby .rooms-item:hover { transform: translateY(-1px); border-color: #9bd8c0 !important; box-shadow: 0 9px 22px rgba(29,66,52,.08) !important; }
+body.is-lobby .ChatBox,
+body.is-waiting .ChatBox {
+  top: 82px; width: 282px !important; height: calc(100vh - 82px) !important;
+  border-left: 1px solid var(--ks-line) !important; background: var(--ks-surface) !important;
+}
+
+/* Waiting room */
+body.is-waiting #Middle { padding: 112px 282px 0 0 !important; }
+body.is-waiting .kkutu-menu {
+  top: 82px; width: calc(100vw - 282px) !important; min-height: 112px;
+  border-bottom: 1px solid var(--ks-line) !important; background: rgba(255,255,255,.94) !important;
+}
+body.is-waiting #StartBtn { width: 260px !important; height: 64px; border: 0 !important; border-radius: 16px !important; font-size: 22px; box-shadow: 0 10px 24px rgba(32,173,120,.22) !important; }
+body.is-waiting .RoomBox { height: calc(100vh - 194px) !important; background: transparent !important; }
+body.is-waiting .RoomBox .product-body { padding: 22px !important; }
+body.is-waiting .room-users { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+body.is-waiting .room-user {
+  height: 184px !important; border: 1px solid var(--ks-line) !important; border-radius: var(--ks-radius) !important;
+  background: var(--ks-surface-solid) !important; box-shadow: 0 10px 26px rgba(29,66,52,.08) !important;
+}
+body.is-waiting .team-selector { top: 124px; left: 28px; border: 1px solid var(--ks-line); box-shadow: 0 8px 20px rgba(29,66,52,.08); }
+
+/* Game */
+body.is-gaming #Top { height: 42px !important; border: 0 !important; background: #17251f !important; }
+body.is-gaming #Middle { height: calc(100vh - 42px) !important; }
+body.is-gaming .kkutu-menu { min-height: 50px; background: #17251f !important; }
+body.is-gaming .GameBox {
+  height: calc(100vh - 92px) !important;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(89,206,156,.17), transparent 34%),
+    linear-gradient(160deg, #eef8f1, #e4f2e8) !important;
+}
+body.is-gaming .GameBox .jjoDisplayBar { border-radius: 20px !important; box-shadow: 0 14px 34px rgba(29,66,52,.16) !important; }
+body.is-gaming .game-input { border-radius: 16px !important; box-shadow: 0 12px 32px rgba(29,66,52,.13) !important; }
+.round-status { border: 1px solid var(--ks-line); border-radius: 0 0 14px 14px; background: rgba(255,255,255,.94); }
+
+/* Dialog system */
+.dialog {
+  overflow: hidden; border: 1px solid var(--ks-line) !important; border-radius: var(--ks-radius) !important;
+  background: var(--ks-surface-solid) !important; box-shadow: 0 24px 70px rgba(18,45,35,.24) !important;
+}
+.dialog-head { min-height: 48px !important; border-bottom: 1px solid var(--ks-line) !important; background: #f5faf7 !important; }
+.dialog-title { padding: 15px 18px !important; color: var(--ks-text) !important; font-size: 15px; font-weight: 900; }
+.dialog-body { color: var(--ks-text); background: #fff !important; }
+.dialog input:not([type=checkbox]), .dialog select, #Talk {
+  border: 1px solid #cfddd7 !important; border-radius: 10px !important; outline: 0;
+  background: #fff !important; transition: border-color .15s ease, box-shadow .15s ease;
+}
+.dialog input:focus, .dialog select:focus, #Talk:focus { border-color: var(--ks-primary) !important; box-shadow: 0 0 0 3px rgba(32,173,120,.12); }
+
+/* Responsive collapse */
+@media (max-width: 1100px) {
+  body.is-lobby #Middle { padding-left: 24px !important; padding-right: 260px !important; }
+  body.is-lobby .reference-side-nav, body.is-lobby .reference-mascot { display: none !important; }
+  body.is-lobby .kkutu-menu, body.is-lobby .RoomListBox, body.is-lobby .ShopBox { width: calc(100vw - 284px) !important; }
+  body.is-lobby .ChatBox, body.is-waiting .ChatBox { width: 250px !important; }
+  body.is-waiting #Middle { padding-right: 250px !important; }
+  body.is-waiting .kkutu-menu { width: calc(100vw - 250px) !important; }
+}
+@media (max-width: 760px) {
+  #Top { height: 68px !important; }
+  #Middle { height: calc(100vh - 68px) !important; }
+  .reference-profile-copy { min-width: 0; }
+  .reference-level { width: 150px; }
+  body.is-lobby #Middle { padding: 12px !important; }
+  body.is-lobby .kkutu-menu, body.is-lobby .RoomListBox, body.is-lobby .ShopBox { width: 100% !important; }
+  body.is-lobby .ChatBox, body.is-waiting .ChatBox { display: none !important; }
+  body.is-waiting #Middle { padding: 102px 0 0 !important; }
+  body.is-waiting .kkutu-menu { top: 68px; width: 100% !important; min-height: 102px; }
+  body.is-waiting .RoomBox { height: calc(100vh - 170px) !important; }
+  body.is-waiting .room-users { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+  body.is-gaming .chain { transform: scale(.68); transform-origin: right top; }
+}
